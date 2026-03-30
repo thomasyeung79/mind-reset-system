@@ -13,6 +13,8 @@ def connect_database():
     )
 
 def save_to_database(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow):
+    conn = None
+    
     try:
         conn = connect_database()
         cursor = conn.cursor()
@@ -45,6 +47,8 @@ def save_to_database(clean_things, clean_mood, stress_level, energy_level, summa
             conn.close()
 
 def get_history():
+    conn = None
+    
     try:
         conn = connect_database()
         query = "SELECT * FROM mind_reset_records ORDER BY created_at DESC"
