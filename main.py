@@ -147,8 +147,6 @@ with c1:
     clean_mood = [m.split(".", 1)[1].strip() for m in mood]
     st.caption("How are you feeling emotionally? (You can select multiple)")
 
-    st.markdown("---")
-
 with c2:
     st.markdown("### ⚡ Physical State")
     energy_level = st.selectbox(
