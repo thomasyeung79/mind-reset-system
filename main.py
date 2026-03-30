@@ -19,7 +19,7 @@ def connect_database():
         return None
 
 
-def save_to_database(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow):
+def save_to_database(user_name, clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow):
     conn = None
     cursor = None
 
@@ -56,7 +56,7 @@ def save_to_database(clean_things, clean_mood, stress_level, energy_level, summa
             conn.close()
 
 
-def get_history():
+def get_history(user_name):
     conn = None
 
     try:
@@ -106,6 +106,14 @@ hr {
 st.title("🫀 Mind Reset System")
 st.caption("A gentle check-in system for stressful or heavy days.")
 st.info("Select your current mood, daily events, energy level, and stress level to receive a short reset note.")
+st.markdown("---")
+
+st.info("Enter your details below to generate your personalised AI health assessment.")
+user_name = st.text_input("👤 Your name")
+
+if not user_name:
+    st.info("👆 Please enter your name to start the assessment.")
+    st.stop()
 st.markdown("---")
 
 st.subheader("📝 Daily Check-In")
