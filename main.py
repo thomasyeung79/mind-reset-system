@@ -107,10 +107,10 @@ hr {
 st.title("🫀 Mind Reset System")
 st.caption("A gentle check-in system for stressful or heavy days.")
 st.info("Select your current mood, daily events, energy level, and stress level to receive a short reset note.")
-st.markdown("---")
 
 st.info("Enter your details below to generate your personalised AI health assessment.")
 user_name = st.text_input("👤 Your name")
+st.markdown("---")
 
 if not user_name:
     st.info("👆 Please enter your name to start the assessment.")
@@ -130,8 +130,9 @@ with c1:
         "D. Nothing special",
     ]
 
-    things_happened = st.multiselect("Current things", things_happened_options)
+    things_happened = st.multiselect("Current things:", things_happened_options)
     clean_things = [m.split(".", 1)[1].strip() for m in things_happened]
+    st.caption("What happened today? (You can select multiple)")
 
     st.markdown("---")
 
@@ -144,8 +145,9 @@ with c1:
        "F. Calm",
     ]
 
-    mood = st.multiselect("Current mood", mood_options)
+    mood = st.multiselect("Current mood:", mood_options)
     clean_mood = [m.split(".", 1)[1].strip() for m in mood]
+    st.caption("How are you feeling emotionally? (You can select multiple)")
 
     st.markdown("---")
 
@@ -160,6 +162,7 @@ with c2:
         4: "4 - Very energetic",
       }[x]
     )
+    st.caption("How much energy do you have right now?")
 
     st.markdown("---")
 
@@ -173,6 +176,7 @@ with c2:
         4: "4 - Overwhelmed",
       }[x]
     )
+    st.caption("How pressured or overwhelmed do you feel?")
 
 st.markdown("---")
 
