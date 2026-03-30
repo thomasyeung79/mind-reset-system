@@ -3,24 +3,26 @@ import pandas as pd
 import mysql.connector
 from mysql.connector import Error
 
+
 def connect_database():
     try:
         conn = mysql.connector.connect(
-             host=st.secrets["MYSQLHOST"],
-             user=st.secrets["MYSQLUSER"],
-             password=st.secrets["MYSQLPASSWORD"],
-             database=st.secrets["MYSQLDATABASE"],
-             port=int(st.secrets["MYSQLPORT"])
+            host=st.secrets["MYSQLHOST"],
+            user=st.secrets["MYSQLUSER"],
+            password=st.secrets["MYSQLPASSWORD"],
+            database=st.secrets["MYSQLDATABASE"],
+            port=int(st.secrets["MYSQLPORT"])
         )
         return conn
     except Error as e:
         st.error(f"Database connection failed: {e}")
         return None
 
+
 def save_to_database(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow):
     conn = None
     cursor = None
-    
+
     try:
         conn = connect_database()
         cursor = conn.cursor()
@@ -53,9 +55,10 @@ def save_to_database(clean_things, clean_mood, stress_level, energy_level, summa
         if conn is not None:
             conn.close()
 
+
 def get_history():
     conn = None
-    
+
     try:
         conn = connect_database()
         query = "SELECT * FROM mind_reset_records ORDER BY created_at DESC"
@@ -69,59 +72,97 @@ def get_history():
     finally:
         if conn is not None:
             conn.close()
-            
+
+st.markdown("""
+<style>
+.main {
+    background-color: #f7f9fc;
+}
+
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 900px;
+}
+
+div[data-testid="stForm"] {
+    background-color: white;
+    padding: 1.2rem;
+    border-radius: 16px;
+    border: 1px solid #e9ecef;
+}
+
+div[data-testid="stAlert"] {
+    border-radius: 14px;
+}
+
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+</style>
+""", unsafe_allow_html=True)
+
 st.title("🫀 Mind Reset System")
-st.caption("A small system for heavy days.")
+st.caption("A gentle check-in system for stressful or heavy days.")
+st.info("Select your current mood, daily events, energy level, and stress level to receive a short reset note.")
 st.markdown("---")
 
-things_happened_options = [
-    "A. Failed the exam again",
-    "B. Had a long day",
-    "C. Argued with someone",
-    "D. Nothing special",
-]
+st.subheader("📝 Daily Check-In")
+st.caption("Choose the options that best describe your current state.")
 
-things_happened = st.multiselect("Current things", things_happened_options)
-clean_things = [m.split(".", 1)[1].strip() for m in things_happened]
+c1, c2 = st.columns(2)
 
-st.markdown("---")
+with c1:
+    things_happened_options = [
+        "A. Failed the exam again",
+        "B. Had a long day",
+        "C. Argued with someone",
+        "D. Nothing special",
+    ]
 
-mood_options = [
-    "A. Low",
-    "B. Tired",
-    "C. Anxious",
-    "D. Angry",
-    "E. Numb",
-    "F. Calm",
-]
+    things_happened = st.multiselect("Current things", things_happened_options)
+    clean_things = [m.split(".", 1)[1].strip() for m in things_happened]
 
-mood = st.multiselect("Current mood", mood_options)
-clean_mood = [m.split(".", 1)[1].strip() for m in mood]
+    st.markdown("---")
 
-st.markdown("---")
+    mood_options = [
+       "A. Low",
+       "B. Tired",
+       "C. Anxious",
+       "D. Angry",
+       "E. Numb",
+       "F. Calm",
+    ]
 
-energy_level = st.selectbox(
-        "Energy level:",
-        [1, 2, 3, 4],
-        format_func=lambda x: {
-            1: "1 - Exhausted",
-            2: "2 - Normal",
-            3: "3 - Good",
-            4: "4 - Very energetic",
-        }[x]
+    mood = st.multiselect("Current mood", mood_options)
+    clean_mood = [m.split(".", 1)[1].strip() for m in mood]
+
+    st.markdown("---")
+
+with c2:
+    energy_level = st.selectbox(
+      "Energy level:",
+      [1, 2, 3, 4],
+      format_func=lambda x: {
+        1: "1 - Exhausted",
+        2: "2 - Normal",
+        3: "3 - Good",
+        4: "4 - Very energetic",
+      }[x]
     )
 
-st.markdown("---")
+    st.markdown("---")
 
-stress_level = st.selectbox(
-        "Stress level:",
-        [1, 2, 3, 4],
-        format_func=lambda x: {
-            1: "1 - Relaxed",
-            2: "2 - Manageable",
-            3: "3 - High pressure",
-            4: "4 - Overwhelmed",
-        }[x]
+    stress_level = st.selectbox(
+      "Stress level:",
+      [1, 2, 3, 4],
+      format_func=lambda x: {
+        1: "1 - Relaxed",
+        2: "2 - Manageable",
+        3: "3 - High pressure",
+        4: "4 - Overwhelmed",
+      }[x]
     )
 
 st.markdown("---")
@@ -137,8 +178,8 @@ def format_phrase(items):
     else:
         return f"{', '.join(items[:-1])} and {items[-1]}"
 
-def generate_summary(clean_mood, clean_things, stress_level, energy_level):
 
+def generate_summary(clean_mood, clean_things, stress_level, energy_level):
     mood_parts = []
     event_parts = []
 
@@ -198,7 +239,6 @@ def generate_summary(clean_mood, clean_things, stress_level, energy_level):
 
 
 def generate_tonight(energy_level, clean_mood):
-
     if energy_level == 1:
         return "Tonight, focus on rest. Do not push yourself."
 
@@ -213,7 +253,6 @@ def generate_tonight(energy_level, clean_mood):
 
 
 def generate_tomorrow(stress_level, clean_things):
-
     if stress_level == 4:
         return "Tomorrow, focus on one small step only."
 
@@ -226,8 +265,8 @@ def generate_tomorrow(stress_level, clean_things):
     else:
         return "You can move forward at your normal pace tomorrow."
 
-
-if st.button("Generate"):
+st.caption("When you are ready, generate your reset note below.")
+if st.button("✨ Generate Reset Note"):
     if not clean_mood and not clean_things:
         st.error("Please select at least one mood or event.")
 
@@ -238,7 +277,8 @@ if st.button("Generate"):
 
         save_to_database(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow)
 
-        st.subheader("📝 Summary")
+        st.subheader("🧾 Your Reset Note")
+        st.caption("Here is a short emotional summary and a practical next step.")
         st.info(summary)
 
         st.markdown("---")
@@ -253,20 +293,24 @@ if st.button("Generate"):
 
     st.markdown("---")
     st.subheader("📜 History")
+    st.caption("Your recent check-in records are shown below.")
 
     history_df = get_history()
 
     if not history_df.empty:
         st.dataframe(
-           history_df[[
-               "created_at",
-               "things_happened",
-               "mood",
-               "stress_level",
-               "energy_level",
-               "summary"
-           ]],
-           use_container_width=True
+            history_df[[
+                "created_at",
+                "things_happened",
+                "mood",
+                "stress_level",
+                "energy_level",
+                "summary"
+            ]],
+            use_container_width=True
         )
     else:
         st.caption("No records yet.")
+
+st.markdown("---")
+st.caption("This tool is for reflection and general support only. It is not a medical or psychological diagnostic tool.")
