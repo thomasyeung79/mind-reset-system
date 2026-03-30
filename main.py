@@ -107,9 +107,7 @@ hr {
 st.title("🫀 Mind Reset System")
 st.caption("A gentle check-in system for stressful or heavy days.")
 st.info("Select your current mood, daily events, energy level, and stress level to receive a short reset note.")
-
 user_name = st.text_input("👤 Your name")
-st.markdown("---")
 
 if not user_name:
     st.info("👆 Please enter your name to start the assessment.")
