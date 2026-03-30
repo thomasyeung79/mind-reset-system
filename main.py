@@ -225,7 +225,7 @@ if st.button("Generate"):
         tonight = generate_tonight(energy_level, clean_mood)
         tomorrow = generate_tomorrow(stress_level, clean_things)
 
-        save_to_db(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow)
+        save_to_database(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow)
 
         st.subheader("📝 Summary")
         st.info(summary)
