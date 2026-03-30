@@ -108,7 +108,6 @@ st.title("🫀 Mind Reset System")
 st.caption("A gentle check-in system for stressful or heavy days.")
 st.info("Select your current mood, daily events, energy level, and stress level to receive a short reset note.")
 
-st.info("Enter your details below to generate your personalised AI health assessment.")
 user_name = st.text_input("👤 Your name")
 st.markdown("---")
 
@@ -123,6 +122,7 @@ st.caption("Choose the options that best describe your current state.")
 c1, c2 = st.columns(2)
 
 with c1:
+    st.markdown("### 🧠 Emotional Check")
     things_happened_options = [
         "A. Failed the exam again",
         "B. Had a long day",
@@ -152,6 +152,7 @@ with c1:
     st.markdown("---")
 
 with c2:
+    st.markdown("### ⚡ Physical State")
     energy_level = st.selectbox(
       "Energy level:",
       [1, 2, 3, 4],
