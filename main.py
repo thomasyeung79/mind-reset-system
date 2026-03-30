@@ -34,7 +34,7 @@ def save_to_database(user_name, clean_things, clean_mood, stress_level, energy_l
         """
 
         values = (
-            "user_name",
+            user_name,
             ", ".join(clean_things),
             ", ".join(clean_mood),
             stress_level,
