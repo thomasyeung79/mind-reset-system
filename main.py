@@ -19,6 +19,7 @@ def connect_database():
 
 def save_to_database(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow):
     conn = None
+    cursor = None
     
     try:
         conn = connect_database()
