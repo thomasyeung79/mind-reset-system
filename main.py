@@ -66,7 +66,7 @@ def get_history():
         return pd.DataFrame()
 
     finally:
-        if conn.is_not None:
+        if conn is not None:
             conn.close()
             
 st.title("🫀 Mind Reset System")
