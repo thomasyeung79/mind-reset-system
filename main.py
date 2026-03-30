@@ -4,13 +4,18 @@ import mysql.connector
 from mysql.connector import Error
 
 def connect_database():
-    return mysql.connector.connect(
-        host=st.secrets["MYSQLHOST"],
-        user=st.secrets["MYSQLUSER"],
-        password=st.secrets["MYSQLPASSWORD"],
-        database=st.secrets["MYSQLDATABASE"],
-        port=int(st.secrets["MYSQLPORT"])
-    )
+    try:
+        conn = mysql.connector.connect(
+             host=st.secrets["MYSQLHOST"],
+             user=st.secrets["MYSQLUSER"],
+             password=st.secrets["MYSQLPASSWORD"],
+             database=st.secrets["MYSQLDATABASE"],
+             port=int(st.secrets["MYSQLPORT"])
+        )
+        return conn
+    except Error as e:
+        st.error(f"Database connection failed: {e}")
+        return None
 
 def save_to_database(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow):
     conn = None
@@ -42,8 +47,9 @@ def save_to_database(clean_things, clean_mood, stress_level, energy_level, summa
         st.error(f"Database save failed: {e}")
 
     finally:
-        if conn.is_connected():
+        if cursor is not None:
             cursor.close()
+        if conn is not None:
             conn.close()
 
 def get_history():
@@ -60,7 +66,7 @@ def get_history():
         return pd.DataFrame()
 
     finally:
-        if conn.is_connected():
+        if conn.is_not None:
             conn.close()
             
 st.title("🫀 Mind Reset System")
