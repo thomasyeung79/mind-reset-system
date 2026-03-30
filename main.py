@@ -304,7 +304,7 @@ if st.button("✨ Generate Reset Note"):
     st.subheader("📜 History")
     st.caption("Your recent check-in records are shown below.")
 
-    history_df = get_history()
+    history_df = get_history(user_name)
 
     if not history_df.empty:
         st.dataframe(
