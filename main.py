@@ -29,11 +29,12 @@ def save_to_database(user_name, clean_things, clean_mood, stress_level, energy_l
 
         query = """
         INSERT INTO mind_reset_records
-        (things_happened, mood, stress_level, energy_level, summary, tonight, tomorrow)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        (user_name, things_happened, mood, stress_level, energy_level, summary, tonight, tomorrow)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
 
         values = (
+            "user_name",
             ", ".join(clean_things),
             ", ".join(clean_mood),
             stress_level,
@@ -283,7 +284,7 @@ if st.button("✨ Generate Reset Note"):
         tonight = generate_tonight(energy_level, clean_mood)
         tomorrow = generate_tomorrow(stress_level, clean_things)
 
-        save_to_database(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow)
+        save_to_database(user_name, clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow)
 
         st.subheader("🧾 Your Reset Note")
         st.caption("Here is a short emotional summary and a practical next step.")
@@ -308,6 +309,7 @@ if st.button("✨ Generate Reset Note"):
     if not history_df.empty:
         st.dataframe(
             history_df[[
+                "user_name",
                 "created_at",
                 "things_happened",
                 "mood",
