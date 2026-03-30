@@ -1,5 +1,64 @@
 import streamlit as st
+import pandas as pd
+import mysql.connector
+from mysql.connector import Error
 
+def connect_database():
+    return mysql.connector.connect(
+        host=st.secrets["MYSQLHOST"],
+        user=st.secrets["MYSQLUSER"],
+        password=st.secrets["MYSQLPASSWORD"],
+        database=st.secrets["MYSQLDATABASE"],
+        port=int(st.secrets["MYSQLPORT"])
+    )
+
+def save_to_db(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow):
+    try:
+        conn = connect_database()
+        cursor = conn.cursor()
+
+        query = """
+        INSERT INTO mind_reset_records
+        (things_happened, mood, stress_level, energy_level, summary, tonight, tomorrow)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+
+        values = (
+            ", ".join(clean_things),
+            ", ".join(clean_mood),
+            stress_level,
+            energy_level,
+            summary,
+            tonight,
+            tomorrow
+        )
+
+        cursor.execute(query, values)
+        conn.commit()
+
+    except Error as e:
+        st.error(f"Database save failed: {e}")
+
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+def get_history():
+    try:
+        conn = connect_database()
+        query = "SELECT * FROM mind_reset_records ORDER BY created_at DESC"
+        df = pd.read_sql(query, conn)
+        return df
+
+    except Error as e:
+        st.error(f"Database load failed: {e}")
+        return pd.DataFrame()
+
+    finally:
+        if conn.is_connected():
+            conn.close()
+            
 st.title("🫀 Mind Reset System")
 st.caption("A small system for heavy days.")
 st.markdown("---")
@@ -166,6 +225,8 @@ if st.button("Generate"):
         tonight = generate_tonight(energy_level, clean_mood)
         tomorrow = generate_tomorrow(stress_level, clean_things)
 
+        save_to_db(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow)
+
         st.subheader("📝 Summary")
         st.info(summary)
 
@@ -178,3 +239,23 @@ if st.button("Generate"):
 
         st.subheader("🌅 Tomorrow")
         st.warning(tomorrow)
+
+    st.markdown("---")
+    st.subheader("📜 History")
+
+    history_df = get_history()
+
+    if not history_df.empty:
+        st.dataframe(
+           history_df[[
+               "created_at",
+               "things_happened",
+               "mood",
+               "stress_level",
+               "energy_level",
+               "summary"
+           ]],
+           use_container_width=True
+        )
+    else:
+        st.caption("No records yet.")
