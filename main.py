@@ -12,7 +12,7 @@ def connect_database():
         port=int(st.secrets["MYSQLPORT"])
     )
 
-def save_to_db(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow):
+def save_to_database(clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow):
     try:
         conn = connect_database()
         cursor = conn.cursor()
