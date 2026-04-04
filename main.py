@@ -70,7 +70,7 @@ def get_history(user_name):
     try:
         conn = connect_database()
         query = "SELECT * FROM mind_reset_records ORDER BY created_at DESC"
-        df = pd.read_sql(query, conn)
+        df = pd.read_sql(query, conn, params=(user_name,))
         return df
 
     except Error as e:
@@ -315,6 +315,9 @@ if st.button("✨ Generate Reset Note"):
     st.caption("Your recent check-in records are shown below.")
 
     history_df = get_history(user_name)
+    if not user_name:
+        st.warning("Please enter your name.")
+        st.stop()
 
     if not history_df.empty:
         st.dataframe(
