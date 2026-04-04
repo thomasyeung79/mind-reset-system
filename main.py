@@ -1,8 +1,15 @@
 import streamlit as st
 import pandas as pd
 import mysql.connector
+import random
 from mysql.connector import Error
 
+summary_templates = [
+    "It seems like today has been a bit heavy for you.",
+    "You've been carrying quite a bit today.",
+    "Today feels a little overlming, doesn't it?",
+    "You seem a bit drained today.",
+]
 
 def connect_database():
     try:
@@ -281,7 +288,9 @@ if st.button("✨ Generate Reset Note"):
         st.error("Please select at least one mood or event.")
 
     else:
-        summary = generate_summary(clean_mood, clean_things, stress_level, energy_level)
+        base_summary = generate_summary(clean_mood, clean_things, stress_level, energy_level)
+        random_summary = random.choice(summary_templates)
+        summary = random_summary + " " + base_summary
         tonight = generate_tonight(energy_level, clean_mood)
         tomorrow = generate_tomorrow(stress_level, clean_things)
 
