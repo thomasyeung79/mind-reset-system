@@ -282,6 +282,36 @@ def generate_tomorrow(stress_level, clean_things):
     else:
         return "You can move forward at your normal pace tomorrow."
 
+def generate_ai_reflection(clean_mood, clean_things, stress_level, energy_level):
+    if stress_level >= 7:
+        return "Your system is under high pressure. It’s okay to slow down."
+    elif energy_level <= 3:
+        return "You seem low on energy. Recovery is more important than pushing."
+    elif "Failed the exam again" in clean_things:
+        return "This setback doesn’t define you. It’s part of your process."
+    else:
+        return "You are maintaining balance. Keep going."
+
+def generate_theme(clean_mood, clean_things, stress_level, energy_level):
+    if stress_level >= 7:
+        return "Recovery Mode"
+    elif energy_level <= 3:
+        return "Low Energy Day"
+    elif "Anxious" in clean_mood:
+        return "Emotional Processing"
+    else:
+        return "Stable Flow"
+
+def generate_label(clean_mood, stress_level, energy_level):
+    if stress_level >= 7:
+        return "High Stress"
+    elif energy_level <= 3:
+        return "Low Energy"
+    elif "Tired" in clean_mood:
+        return "Fatigue"
+    else:
+        return "Normal"
+
 st.caption("When you are ready, generate your reset note below.")
 if st.button("✨ Generate Reset Note"):
     if not clean_mood and not clean_things:
@@ -294,11 +324,23 @@ if st.button("✨ Generate Reset Note"):
         tonight = generate_tonight(energy_level, clean_mood)
         tomorrow = generate_tomorrow(stress_level, clean_things)
 
+        reflection = generate_ai_reflection(clean_mood, clean_things, stress_level, energy_level)
+        theme = generate_theme(clean_mood, clean_things, stress_level, energy_level)
+        label = generate_label(clean_mood, stress_level, energy_level)
+
         save_to_database(user_name, clean_things, clean_mood, stress_level, energy_level, summary, tonight, tomorrow)
 
-        st.subheader("🧾 Your Reset Note")
-        st.caption("Here is a short emotional summary and a practical next step.")
-        st.info(summary)
+        st.subheader("🧠 AI Reflection")
+        st.info(reflection)
+
+        st.markdown(f"**🏷️ Today's Theme:** {theme}")
+        st.markdown(f"**✨ Check-in Label:** {label}")
+
+        st.markdown("---")
+        
+        st.subheader("🧾 Full Note")
+        st.caption("A more complete summary of your day.")
+        st.write(summary)
 
         st.markdown("---")
 
