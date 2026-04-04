@@ -69,7 +69,7 @@ def get_history(user_name):
 
     try:
         conn = connect_database()
-        query = "SELECT * FROM mind_reset_records ORDER BY created_at DESC"
+        query = "SELECT * FROM mind_reset_records WHERE user_name = %s ORDER BY created_at DESC"
         df = pd.read_sql(query, conn, params=(user_name,))
         return df
 
