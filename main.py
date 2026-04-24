@@ -955,6 +955,8 @@ else:
     manual_topic = None
     st.caption("Auto mode will match a topic based on your current state.")
 
+st.markdown("---")
+
 c1, c2 = st.columns(2)
 
 with c1:
