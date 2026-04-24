@@ -307,50 +307,59 @@ CHECKIN_TEXT = {
 st.markdown("""
 <style>
 .block-container {
-    padding-top: 2.5rem;
+    padding-top: 2.4rem;
     padding-bottom: 3rem;
-    max-width: 980px;
-}
-
-.main-card {
-    background: #ffffff;
-    padding: 1.4rem 1.6rem;
-    border-radius: 22px;
-    border: 1px solid #e9ecef;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
-    margin-bottom: 1.2rem;
+    max-width: 1000px;
 }
 
 .hero {
-    background: linear-gradient(135deg, #f7f9fc, #eef3ff);
+    background: linear-gradient(135deg, #f8fbff, #eef4ff);
     padding: 2rem;
-    border-radius: 28px;
-    border: 1px solid #e4e9f2;
-    margin-bottom: 1.5rem;
+    border-radius: 30px;
+    border: 1px solid #e5ebf5;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    margin-bottom: 1.4rem;
 }
 
 .hero-title {
-    font-size: 2.1rem;
-    font-weight: 800;
-    margin-bottom: 0.4rem;
+    font-size: 2.2rem;
+    font-weight: 850;
+    margin-bottom: 0.5rem;
 }
 
 .hero-subtitle {
-    font-size: 1rem;
     color: #5f6b7a;
-    line-height: 1.6;
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+.app-card {
+    background: #ffffff;
+    padding: 1.3rem 1.5rem;
+    border-radius: 24px;
+    border: 1px solid #edf0f5;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.035);
+    margin: 1rem 0;
+}
+
+.result-card {
+    background: #ffffff;
+    padding: 1.2rem 1.4rem;
+    border-radius: 22px;
+    border-left: 6px solid #1f6feb;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.035);
+    margin: 1rem 0;
 }
 
 .section-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
+    font-size: 1.2rem;
+    font-weight: 750;
+    margin-bottom: 0.35rem;
 }
 
 .small-caption {
     color: #6c757d;
     font-size: 0.92rem;
-    margin-bottom: 0.8rem;
 }
 
 div[data-testid="stAlert"] {
@@ -358,9 +367,10 @@ div[data-testid="stAlert"] {
 }
 
 .stButton > button {
+    width: 100%;
     border-radius: 999px;
-    padding: 0.7rem 1.4rem;
-    font-weight: 700;
+    padding: 0.75rem 1.4rem;
+    font-weight: 800;
     border: none;
     background: #1f6feb;
     color: white;
@@ -372,15 +382,14 @@ div[data-testid="stAlert"] {
 }
 
 hr {
-    margin-top: 1.3rem;
-    margin-bottom: 1.3rem;
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
 }
 </style>
 """, unsafe_allow_html=True)
 
 def scripture_text(key, language):
     return f"{SCRIPTURE_DB[key][language]} — {key}"
-
 
 def generate_summary(clean_mood, clean_things, stress_level, energy_level, language):
     if language == "中文":
@@ -1005,9 +1014,9 @@ st.markdown("---")
 ct = CHECKIN_TEXT[language]
 
 st.markdown(f"""
-<div class="main-card">
-<div class="section-title">{ct["title"]}</div>
-<div class="small-caption">{ct["caption"]}</div>
+<div class="app-card">
+    <div class="section-title">{ct["title"]}</div>
+    <div class="small-caption">{ct["caption"]}</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1116,9 +1125,9 @@ if st.button(t["button"]):
 
         if mode == "Dashboard":
             st.markdown(f"""
-            <div class="main-card">
-            <div class="section-title">{t["reset_note"]}</div>
-            <div class="small-caption">{t["reset_caption"]}</div>
+            <div class="result-card">
+                <div class="section-title">{t["reset_note"]}</div>
+                <div class="small-caption">{t["reset_caption"]}</div>
             </div>
             """, unsafe_allow_html=True)
 
