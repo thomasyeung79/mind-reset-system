@@ -131,10 +131,10 @@ MOOD_OPTIONS = {
 }
 
 EVENT_OPTIONS = {
-    "Failed the exam again": {
-        "English": "Failed the exam again",
-        "中文": "考试再次失利",
-        "한국어": "시험에서 다시 실패함"
+    "Academic or work-related issue": {
+        "English": "Academic or work-related issue",
+        "中文": "学习或工作方面的困扰",
+        "한국어": "학업 또는 업무 관련 문제"
     },
     "Had a long day": {
         "English": "Had a long day",
@@ -292,16 +292,73 @@ SCRIPTURE_DB = {
 st.markdown("""
 <style>
 .block-container {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    max-width: 950px;
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+    max-width: 980px;
 }
+
+.main-card {
+    background: #ffffff;
+    padding: 1.4rem 1.6rem;
+    border-radius: 22px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+    margin-bottom: 1.2rem;
+}
+
+.hero {
+    background: linear-gradient(135deg, #f7f9fc, #eef3ff);
+    padding: 2rem;
+    border-radius: 28px;
+    border: 1px solid #e4e9f2;
+    margin-bottom: 1.5rem;
+}
+
+.hero-title {
+    font-size: 2.1rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+}
+
+.hero-subtitle {
+    font-size: 1rem;
+    color: #5f6b7a;
+    line-height: 1.6;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+}
+
+.small-caption {
+    color: #6c757d;
+    font-size: 0.92rem;
+    margin-bottom: 0.8rem;
+}
+
 div[data-testid="stAlert"] {
-    border-radius: 14px;
+    border-radius: 16px;
 }
+
+.stButton > button {
+    border-radius: 999px;
+    padding: 0.7rem 1.4rem;
+    font-weight: 700;
+    border: none;
+    background: #1f6feb;
+    color: white;
+}
+
+.stButton > button:hover {
+    background: #185abc;
+    color: white;
+}
+
 hr {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 1.3rem;
+    margin-bottom: 1.3rem;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -425,7 +482,7 @@ def auto_select_topic(clean_mood, clean_things, stress_level, energy_level):
         return "Patience before reaction"
     elif "Tired" in clean_mood or energy_level <= 2:
         return "Rest and renewal"
-    elif "Failed the exam again" in clean_things:
+    elif "Academic or work-related issue" in clean_things:
         return "Discipline and action"
     elif "Calm" in clean_mood and stress_level <= 2:
         return "Gratitude and peace"
@@ -916,16 +973,26 @@ Faith action:
 **{spiritual_breathing["faith_action"]}**
 """
 
-st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
-
 language = st.selectbox("Language / 语言 / 언어", ["English", "中文", "한국어"])
 t = TEXTS[language]
 
-st.title(t["title"])
-st.caption(t["caption"])
-st.info(t["info"])
+st.markdown(f"""
+<div class="hero">
+    <div class="hero-title">{t["title"]}</div>
+    <div class="hero-subtitle">{t["caption"]}</div>
+    <br>
+    <div class="hero-subtitle">{t["info"]}</div>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("---")
+
+st.markdown("""
+<div class="main-card">
+<div class="section-title">📝 Check-in Panel</div>
+<div class="small-caption">Tell the system how you feel today.</div>
+</div>
+""", unsafe_allow_html=True)
 
 mode = st.radio(
     t["mode"],
@@ -1031,8 +1098,12 @@ if st.button(t["button"]):
         )
 
         if mode == "Dashboard":
-            st.subheader(t["reset_note"])
-            st.caption(t["reset_caption"])
+            st.markdown(f"""
+            <div class="main-card">
+            <div class="section-title">{t["reset_note"]}</div>
+            <div class="small-caption">{t["reset_caption"]}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
             st.markdown("### " + t["insight"])
             st.info(summary)
