@@ -1,85 +1,108 @@
-# 🫀 Mind Reset System
+✝️ Insight to Action
 
-A simple rule-based system for daily emotional check-ins and mental reset.
+From awareness to action.
 
----
+A faith-based reflection system for emotional reset and daily practice.
+一个融合信仰与觉察的反思系统，帮助实现情绪重整与日常实践。
+신앙과 인식을 결합한 성찰 시스템으로, 감정의 회복과 일상의 실천을 돕습니다.
 
-## 📌 Overview
+🚀 Project Overview
 
-The Mind Reset System is a lightweight application designed to help users:
+Insight to Action is a multilingual reflection system that transforms:
 
-- Reflect on their daily emotional state
-- Identify stress and energy levels
-- Receive structured and practical suggestions for tonight and tomorrow
+Emotions → Awareness → Structured Guidance → Practical Action
 
-This project focuses on transforming user inputs into natural, human-like feedback using rule-based logic.
+It helps users:
 
----
+Understand their emotional state
+Receive structured reflection (faith + psychology inspired)
+Take small, actionable steps in daily life
+✨ Key Features
+🧠 Emotional Awareness
+Mood & event selection
+Stress & energy level analysis
+Intelligent state summary generation
+✝️ Faith-Based Guidance
+Topic-based reflection system
+Scripture integration (multi-language)
+Principle + Practice structure
+🌬 Breathing & Mind Reset
+Adaptive breathing exercises:
+Calming
+Recovery
+Pause
+Mindful
+Combined with spiritual reflection
+📖 Story Mode（🔥亮点）
+Generates a personalised daily narrative
+Transforms logic into a coherent emotional journey
+🌏 Multilingual Support
+🇬🇧 English
+🇨🇳 中文
+🇰🇷 한국어
+🧩 System Logic
+Input:
+    Mood + Events + Stress + Energy
 
-## 🎯 Features
+↓
 
-- Multi-select input for moods and daily events
-- Structured stress and energy level assessment
-- Intelligent summary generation based on combined inputs
-- Personalised suggestions for:
-  - 🌙 Tonight (short-term recovery)
-  - 🌅 Tomorrow (next-step guidance)
-- Clean and minimal UI using Streamlit
+Analysis:
+    Emotional State Detection
 
----
+↓
 
-## 🧠 How It Works
+Matching:
+    Auto / Manual Topic Selection
 
-The system uses a rule-based approach:
+↓
 
-1. **Input Layer**
-   - Mood (multi-select)
-   - Daily events (multi-select)
-   - Stress level (1–4)
-   - Energy level (1–4)
+Output:
+    Insight
+    + Scripture
+    + Practice
+    + Breathing Exercise
+    + Spiritual Guidance
 
-2. **Processing Layer**
-   - Combines emotional states and events
-   - Evaluates stress and energy conditions
-   - Applies conditional logic to generate responses
+↓
 
-3. **Output Layer**
-   - Summary (overall emotional state)
-   - Tonight advice (immediate action)
-   - Tomorrow advice (forward direction)
+(Optional)
+    Story Mode Narrative
+🛠 Tech Stack
+Python
+Streamlit
+Modular function-based architecture
+Rule-based AI logic (V1)
+🧪 Run Locally
+pip install streamlit
+streamlit run mind_reset_system.py
+🎯 Project Goals
 
----
+This project is designed to demonstrate:
 
-## 🧾 Example Output
+Human-centered system design
+Emotional AI logic (rule-based prototype)
+UX thinking in digital wellbeing tools
+Multilingual product design
+Integration of abstract concepts (faith, emotion, behaviour) into structured systems
+🔮 Future Improvements (V2+)
+🤖 AI-powered recommendations (LLM integration)
+📊 User history & tracking (database)
+📈 Visual dashboards (charts / trends)
+📱 Mobile-friendly UI redesign
+🌍 More languages
+💡 Inspiration
 
-**Input:**
-- Mood: Tired, Anxious  
-- Event: Had a long day  
-- Stress: High  
-- Energy: Low  
+This system is inspired by:
 
-**Output:**
+Emotional awareness frameworks
+Mindfulness practices
+Faith-based reflection traditions
+Behavioural psychology (small-step action)
+📌 Author
 
-> You are under pressure and feeling drained.  
-> You seem mentally tired and anxious after a long day.  
+Thomas Yeung
 
-**Tonight:**  
-Take it easy and allow yourself to rest.
+⚠️ Disclaimer
 
-**Tomorrow:**  
-Focus on one clear task and avoid overload.
-
----
-
-## 🛠 Tech Stack
-
-- Python
-- Streamlit
-
----
-
-## 🚀 How to Run
-
-```bash
-pip install -r requirements.txt
-streamlit run your_file_name.py
+This tool is for reflection and general support only.
+It is not a medical, psychological, or theological authority.
