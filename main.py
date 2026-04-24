@@ -1069,6 +1069,8 @@ with c1:
         format_func=lambda x: MOOD_OPTIONS[x][language]
     )
 
+st.markdown("---")
+
 with c2:
     energy_level = st.selectbox(
         t["energy"],
