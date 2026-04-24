@@ -289,6 +289,21 @@ SCRIPTURE_DB = {
     },
 }
 
+CHECKIN_TEXT = {
+    "English": {
+        "title": "📝 Check-in Panel",
+        "caption": "Tell the system how you feel today."
+    },
+    "中文": {
+        "title": "📝 状态记录",
+        "caption": "记录你此刻的状态"
+    },
+    "한국어": {
+        "title": "📝 상태 체크",
+        "caption": "지금의 상태를 기록하세요"
+    }
+}
+
 st.markdown("""
 <style>
 .block-container {
@@ -987,10 +1002,12 @@ st.markdown(f"""
 
 st.markdown("---")
 
-st.markdown("""
+ct = CHECKIN_TEXT[language]
+
+st.markdown(f"""
 <div class="main-card">
-<div class="section-title">📝 Check-in Panel</div>
-<div class="small-caption">Tell the system how you feel today.</div>
+<div class="section-title">{ct["title"]}</div>
+<div class="small-caption">{ct["caption"]}</div>
 </div>
 """, unsafe_allow_html=True)
 
