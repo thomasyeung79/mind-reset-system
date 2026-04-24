@@ -916,6 +916,8 @@ Faith action:
 **{spiritual_breathing["faith_action"]}**
 """
 
+st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
+
 language = st.selectbox("Language / 语言 / 언어", ["English", "中文", "한국어"])
 t = TEXTS[language]
 
