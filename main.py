@@ -1,5 +1,9 @@
 import random
 import streamlit as st
+import os
+import json
+import pandas as pd
+from datetime import datetime
 
 st.set_page_config(
     page_title="Mind Reset System",
@@ -7,8 +11,32 @@ st.set_page_config(
     layout="wide"
 )
 
-ENABLE_DB = False
+JSON_FILE = "insight_records.json"
 
+def save_to_json(record):
+    records = []
+
+    if os.path.exists(JSON_FILE):
+        with open(JSON_FILE, "r", encoding="utf-8") as f:
+            try:
+                records = json.load(f)
+            except json.JSONDecodeError:
+                records = []
+
+    records.append(record)
+
+    with open(JSON_FILE, "w", encoding="utf-8") as f:
+        json.dump(records, f, ensure_ascii=False, indent=2)
+
+def load_history():
+    if os.path.exists(JSON_FILE):
+        with open(JSON_FILE, "r", encoding="utf-8") as f:
+            try:
+                data = json.load(f)
+                return pd.DataFrame(data)
+            except json.JSONDecodeError:
+                return pd.DataFrame()
+    return pd.DataFrame()
 
 TEXTS = {
     "English": {
@@ -301,6 +329,21 @@ CHECKIN_TEXT = {
     "한국어": {
         "title": "📝 상태 체크",
         "caption": "지금의 상태를 기록하세요"
+    }
+}
+
+HISTORY_TEXT = {
+    "English": {
+        "title": "📜 History",
+        "caption": "Your past reflections are saved below."
+    },
+    "中文": {
+        "title": "📜 历史记录",
+        "caption": "你过去的记录会显示在这里。"
+    },
+    "한국어": {
+        "title": "📜 기록",
+        "caption": "이전에 작성한 기록을 확인할 수 있습니다."
     }
 }
 
@@ -1031,6 +1074,13 @@ st.markdown("---")
 st.subheader(t["daily_checkin"])
 st.caption(t["daily_caption"])
 
+username = st.text_input(
+    "Username / 用户名 / 사용자 이름",
+    placeholder="Enter your name"
+)
+
+st.markdown("---")
+
 st.subheader(t["reflection_topic"])
 
 topic_mode = st.radio(
@@ -1069,8 +1119,6 @@ with c1:
         format_func=lambda x: MOOD_OPTIONS[x][language]
     )
 
-    st.markdown("---")
-
 with c2:
     energy_level = st.selectbox(
         t["energy"],
@@ -1099,7 +1147,9 @@ with c2:
 st.markdown("---")
 
 if st.button(t["button"]):
-    if not clean_mood and not clean_things:
+    if not username:
+        st.error("Please enter a username.")
+    elif not clean_mood and not clean_things:
         st.error(t["error"])
     else:
         summary = generate_summary(clean_mood, clean_things, stress_level, energy_level, language)
@@ -1114,6 +1164,33 @@ if st.button(t["button"]):
         spiritual = generate_topic_guidance(topic, language)
         breathing = generate_breathing_practice(clean_mood, stress_level, energy_level, language)
         spiritual_breathing = generate_spiritual_breathing(breathing["type"], language)
+
+        record = {
+            "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "username": username,
+            "language": language,
+            "mode": mode,
+            "topic_mode": topic_mode,
+            "matched_topic": topic,
+            "mood": clean_mood,
+            "events": clean_things,
+            "stress_level": stress_level,
+            "energy_level": energy_level,
+            "summary": summary,
+            "tonight": tonight,
+            "tomorrow": tomorrow,
+            "principle": spiritual["principle"],
+            "scripture": spiritual["scripture"],
+            "practice": spiritual["practice"],
+            "breathing_title": breathing["title"],
+            "breathing_purpose": breathing["purpose"],
+            "spiritual_scripture": spiritual_breathing["scripture"],
+            "spiritual_reflection": spiritual_breathing["reflection"],
+            "faith_action": spiritual_breathing["faith_action"]
+        }
+
+        storage_used = save_to_json(record)
+        st.success(f"Record saved via {storage_used}.")
 
         story = generate_story(
             summary,
@@ -1185,6 +1262,81 @@ if st.button(t["button"]):
             st.subheader(t["story_title"])
             st.caption(f"{t['matched_topic']}: {TOPIC_OPTIONS[topic][language]}")
             st.markdown(story)
+
+st.markdown("---")
+
+ht = HISTORY_TEXT[language]
+
+st.markdown(f"""
+<div class="app-card">
+    <div class="section-title">{ht["title"]}</div>
+    <div class="small-caption">{ht["caption"]}</div>
+</div>
+""", unsafe_allow_html=True)
+
+history_df = load_history()
+
+if username:
+    if not history_df.empty and "username" in history_df.columns:
+        history_df = history_df[history_df["username"] == username]
+    else:
+        history_df = pd.DataFrame()
+else:
+    history_df = pd.DataFrame()
+
+if not history_df.empty:
+    history_df = history_df.iloc[::-1]
+
+    for i, row in history_df.iterrows():
+        record_time = row.get("created_at", "No time")
+        record_summary = str(row.get("summary", "No summary"))
+        record_topic = str(row.get("matched_topic", "N/A"))
+
+        with st.expander(f"{record_time} | {record_topic} | {record_summary[:35]}..."):
+            st.markdown("### " + t["insight"])
+            st.info(row.get("summary", ""))
+
+            st.markdown("### " + t["truth"])
+            st.success(row.get("principle", ""))
+
+            st.markdown("### " + t["scripture"])
+            st.info(row.get("scripture", ""))
+
+            st.markdown("### " + t["practice"])
+            st.warning(row.get("practice", ""))
+
+            st.markdown("---")
+
+            st.markdown("### " + t["tonight"])
+            st.success(row.get("tonight", ""))
+
+            st.markdown("### " + t["tomorrow"])
+            st.warning(row.get("tomorrow", ""))
+
+            st.markdown("---")
+
+            st.markdown("### " + t["breathing"])
+            st.success(row.get("breathing_title", ""))
+
+            st.markdown("**" + t["purpose"] + "**")
+            st.info(row.get("breathing_purpose", ""))
+
+            st.markdown("### " + t["spiritual_guidance"])
+
+            st.markdown("**" + t["scripture"] + "**")
+            st.info(row.get("spiritual_scripture", ""))
+
+            st.markdown("**" + t["reflection"] + "**")
+            st.write(row.get("spiritual_reflection", ""))
+
+            st.markdown("**" + t["faith_action"] + "**")
+            st.success(row.get("faith_action", ""))
+
+else:
+    if username:
+        st.caption("No records yet.")
+    else:
+        st.caption("Enter a username to view your history.")
 
 st.markdown("---")
 st.caption(t["disclaimer"])
