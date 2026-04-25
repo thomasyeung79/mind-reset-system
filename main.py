@@ -44,18 +44,22 @@ TEXTS = {
         "caption": "A faith-based reflection system for emotional reset and daily practice.",
         "info": "Select your current mood, daily events, energy level, and stress level to receive structured guidance.",
         "mode": "Select Mode",
+        "dashboard": "Dashboard",
+        "story_mode": "Story Mode",
         "topic_mode": "Topic Selection Mode",
         "auto": "Auto",
         "manual": "Manual",
         "daily_checkin": "📝 Daily Check-In",
         "daily_caption": "Choose the options that best describe your current state.",
+        "username": "Username",
+        "username_placeholder": "Enter your name",
         "reflection_topic": "✝️ Reflection Topic",
         "choose_topic": "Choose a reflection topic:",
         "things": "Current things",
         "mood": "Current mood",
         "energy": "Energy level:",
         "stress": "Stress level:",
-        "button": "✨ Generate Reset Note",
+        "button": "✨ Generate Insight",
         "error": "Please select at least one mood or event.",
         "reset_note": "🧾 Your Reset Note",
         "reset_caption": "Here is a short emotional summary and practical guidance.",
@@ -80,18 +84,22 @@ TEXTS = {
         "caption": "一个融合信仰与觉察的反思系统，帮助实现情绪重整与日常实践。",
         "info": "选择你当前的情绪、事件、能量和压力状态，获得结构化引导。",
         "mode": "选择模式",
+        "dashboard": "仪表盘",
+        "story_mode": "故事模式",
         "topic_mode": "主题选择模式",
         "auto": "自动",
         "manual": "手动",
         "daily_checkin": "📝 今日状态记录",
         "daily_caption": "请选择最符合你当前状态的选项。",
+        "username": "用户名",
+        "username_placeholder": "请输入你的名字",
         "reflection_topic": "✝️ 反思主题",
         "choose_topic": "选择一个反思主题：",
         "things": "当前发生的事情",
         "mood": "当前情绪",
         "energy": "能量水平：",
         "stress": "压力水平：",
-        "button": "✨ 生成重整笔记",
+        "button": "✨ 开始分析",
         "error": "请至少选择一个情绪或事件。",
         "reset_note": "🧾 你的重整笔记",
         "reset_caption": "以下是你的状态总结与实践引导。",
@@ -116,18 +124,22 @@ TEXTS = {
         "caption": "신앙과 인식을 결합한 성찰 시스템으로, 감정의 회복과 일상의 실천을 돕습니다.",
         "info": "현재 기분, 하루의 사건, 에너지와 스트레스 수준을 선택하세요.",
         "mode": "모드 선택",
+        "dashboard": "대시보드",
+        "story_mode": "스토리 모드",
         "topic_mode": "주제 선택 모드",
         "auto": "자동",
         "manual": "수동",
         "daily_checkin": "📝 오늘의 체크인",
         "daily_caption": "현재 상태에 가장 가까운 항목을 선택하세요.",
+        "username": "사용자 이름",
+        "username_placeholder": "이름을 입력하세요",
         "reflection_topic": "✝️ 성찰 주제",
         "choose_topic": "성찰 주제를 선택하세요:",
         "things": "오늘 있었던 일",
         "mood": "현재 기분",
         "energy": "에너지 수준:",
         "stress": "스트레스 수준:",
-        "button": "✨ 리셋 노트 생성",
+        "button": "✨ 인사이트 생성",
         "error": "기분 또는 사건을 하나 이상 선택하세요.",
         "reset_note": "🧾 나의 리셋 노트",
         "reset_caption": "현재 상태 요약과 실천 안내입니다.",
@@ -349,84 +361,36 @@ HISTORY_TEXT = {
 
 st.markdown("""
 <style>
-.block-container {
-    padding-top: 2.4rem;
-    padding-bottom: 3rem;
-    max-width: 1000px;
-}
-
 .hero {
-    background: linear-gradient(135deg, #f8fbff, #eef4ff);
-    padding: 2rem;
-    border-radius: 30px;
-    border: 1px solid #e5ebf5;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.04);
-    margin-bottom: 1.4rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 28px;
+    border-radius: 20px;
+    color: white;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
 }
 
 .hero-title {
-    font-size: 2.2rem;
-    font-weight: 850;
-    margin-bottom: 0.5rem;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
 .hero-subtitle {
-    color: #5f6b7a;
-    font-size: 1rem;
-    line-height: 1.65;
+    font-size: 15px;
+    opacity: 0.95;
+    line-height: 1.6;
 }
 
-.app-card {
-    background: #ffffff;
-    padding: 1.3rem 1.5rem;
-    border-radius: 24px;
-    border: 1px solid #edf0f5;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.035);
-    margin: 1rem 0;
+.hero-info {
+    font-size: 14px;
+    opacity: 0.85;
+    margin-top: 8px;
 }
 
-.result-card {
-    background: #ffffff;
-    padding: 1.2rem 1.4rem;
-    border-radius: 22px;
-    border-left: 6px solid #1f6feb;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.035);
-    margin: 1rem 0;
-}
-
-.section-title {
-    font-size: 1.2rem;
-    font-weight: 750;
-    margin-bottom: 0.35rem;
-}
-
-.small-caption {
-    color: #6c757d;
-    font-size: 0.92rem;
-}
-
-div[data-testid="stAlert"] {
-    border-radius: 16px;
-}
-
-.stButton > button {
-    width: 100%;
-    border-radius: 999px;
-    padding: 0.75rem 1.4rem;
-    font-weight: 800;
-    border: none;
-    background: #1f6feb;
-    color: white;
-}
-
-.stButton > button:hover {
-    background: #185abc;
-    color: white;
-}
-
-hr {
-    margin-top: 1.2rem;
-    margin-bottom: 1.2rem;
+.hero-icon {
+    font-size: 30px;
+    margin-right: 10px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -1040,15 +1004,15 @@ Faith action:
 **{spiritual_breathing["faith_action"]}**
 """
 
-language = st.selectbox("Language / 语言 / 언어", ["English", "中文", "한국어"])
+with st.sidebar:
+    language = st.selectbox("🌐 Language / 语言 / 언어", ["中文", "English", "한국어"])
 t = TEXTS[language]
 
 st.markdown(f"""
 <div class="hero">
-    <div class="hero-title">{t["title"]}</div>
+    <div class="hero-title">✨ {t["title"]}</div>
     <div class="hero-subtitle">{t["caption"]}</div>
-    <br>
-    <div class="hero-subtitle">{t["info"]}</div>
+    <div class="hero-info">{t["info"]}</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1065,7 +1029,7 @@ st.markdown(f"""
 
 mode = st.radio(
     t["mode"],
-    ["Dashboard", "Story Mode"],
+    [t["dashboard"], t["story_mode"]],
     horizontal=True
 )
 
@@ -1074,9 +1038,11 @@ st.markdown("---")
 st.subheader(t["daily_checkin"])
 st.caption(t["daily_caption"])
 
+st.markdown("### 👤 " + t["username"])
+
 username = st.text_input(
-    "Username / 用户名 / 사용자 이름",
-    placeholder="Enter your name"
+    "",
+    placeholder=t["username_placeholder"]
 )
 
 st.markdown("---")
