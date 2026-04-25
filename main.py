@@ -28,6 +28,8 @@ def save_to_json(record):
     with open(JSON_FILE, "w", encoding="utf-8") as f:
         json.dump(records, f, ensure_ascii=False, indent=2)
 
+    return "JSON"
+
 def load_history():
     if os.path.exists(JSON_FILE):
         with open(JSON_FILE, "r", encoding="utf-8") as f:
@@ -53,6 +55,7 @@ TEXTS = {
         "daily_caption": "Choose the options that best describe your current state.",
         "username": "Username",
         "username_placeholder": "Enter your name",
+        "username_hint": "Used to separate user history",
         "reflection_topic": "✝️ Reflection Topic",
         "choose_topic": "Choose a reflection topic:",
         "things": "Current things",
@@ -93,6 +96,7 @@ TEXTS = {
         "daily_caption": "请选择最符合你当前状态的选项。",
         "username": "用户名",
         "username_placeholder": "请输入你的名字",
+        "username_hint": "用于区分不同用户的记录",
         "reflection_topic": "✝️ 反思主题",
         "choose_topic": "选择一个反思主题：",
         "things": "当前发生的事情",
@@ -133,6 +137,7 @@ TEXTS = {
         "daily_caption": "현재 상태에 가장 가까운 항목을 선택하세요.",
         "username": "사용자 이름",
         "username_placeholder": "이름을 입력하세요",
+        "username_hint": "사용자 기록을 구분하기 위해 사용됩니다",
         "reflection_topic": "✝️ 성찰 주제",
         "choose_topic": "성찰 주제를 선택하세요:",
         "things": "오늘 있었던 일",
@@ -1018,17 +1023,29 @@ st.markdown(f"""
 
 st.markdown("---")
 
+st.markdown("### 👤 " + t["username"])
+st.caption(t["username_hint"])
+
+username = st.text_input(
+    "",
+    placeholder=t["username_placeholder"]
+)
+
+st.markdown("---")
+
 ct = CHECKIN_TEXT[language]
 
 st.markdown(f"""
 <div class="app-card">
-    <div class="section-title">{ct["title"]}</div>
+    <div class="hero-title">{ct["title"]}</div>
     <div class="small-caption">{ct["caption"]}</div>
 </div>
 """, unsafe_allow_html=True)
 
+st.markdown(" ")
+
 mode = st.radio(
-    t["mode"],
+    "⚙️" + t["mode"],
     [t["dashboard"], t["story_mode"]],
     horizontal=True
 )
@@ -1038,14 +1055,7 @@ st.markdown("---")
 st.subheader(t["daily_checkin"])
 st.caption(t["daily_caption"])
 
-st.markdown("### 👤 " + t["username"])
-
-username = st.text_input(
-    "",
-    placeholder=t["username_placeholder"]
-)
-
-st.markdown("---")
+st.markdown(" ")
 
 st.subheader(t["reflection_topic"])
 
@@ -1114,7 +1124,7 @@ st.markdown("---")
 
 if st.button(t["button"]):
     if not username:
-        st.error("Please enter a username.")
+        st.error(t["username_error"] if "username_error" in t else "Please enter a username.")
     elif not clean_mood and not clean_things:
         st.error(t["error"])
     else:
@@ -1150,84 +1160,104 @@ if st.button(t["button"]):
             "practice": spiritual["practice"],
             "breathing_title": breathing["title"],
             "breathing_purpose": breathing["purpose"],
+            "breathing_steps": breathing["steps"],
             "spiritual_scripture": spiritual_breathing["scripture"],
             "spiritual_reflection": spiritual_breathing["reflection"],
             "faith_action": spiritual_breathing["faith_action"]
         }
 
+        st.session_state["current_record"] = record
+
         storage_used = save_to_json(record)
         st.success(f"Record saved via {storage_used}.")
 
+if "current_record" in st.session_state:
+    record = st.session_state["current_record"]
+
+    if mode == t["dashboard"]:
+        st.markdown(f"""
+        <div class="result-card">
+            <div class="hero-title"><b>{t["reset_note"]}</b></div>
+            <div class="small-caption">{t["reset_caption"]}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(" ")
+
+        st.markdown("### " + t["insight"])
+        st.info(record["summary"])
+
+        st.markdown("---")
+        st.caption(f"{t['matched_topic']}: {TOPIC_OPTIONS[record['matched_topic']][language]}")
+
+        st.markdown("### " + t["truth"])
+        st.success(record["principle"])
+
+        st.markdown("### " + t["scripture"])
+        st.info(record["scripture"])
+
+        st.markdown("### " + t["practice"])
+        st.warning(record["practice"])
+
+        st.markdown("---")
+
+        st.markdown("### " + t["tonight"])
+        st.success(record["tonight"])
+
+        st.markdown("### " + t["tomorrow"])
+        st.warning(record["tomorrow"])
+
+        st.markdown("---")
+
+        st.markdown("### " + t["breathing"])
+        st.success(record["breathing_title"])
+
+        st.markdown("**" + t["purpose"] + "**")
+        st.info(record["breathing_purpose"])
+
+        st.markdown("**" + t["steps"] + "**")
+        for step in record.get("breathing_steps", []):
+            st.write(f"- {step}")
+
+        st.markdown("---")
+
+        st.markdown("### " + t["spiritual_guidance"])
+
+        st.markdown("**" + t["scripture"] + "**")
+        st.info(record["spiritual_scripture"])
+
+        st.markdown("**" + t["reflection"] + "**")
+        st.write(record["spiritual_reflection"])
+
+        st.markdown("**" + t["faith_action"] + "**")
+        st.success(record["faith_action"])
+
+    elif mode == t["story_mode"]:
+        st.subheader(t["story_title"])
+        st.caption(f"{t['matched_topic']}: {TOPIC_OPTIONS[record['matched_topic']][language]}")
+
         story = generate_story(
-            summary,
-            tonight,
-            tomorrow,
-            spiritual,
-            breathing,
-            spiritual_breathing,
+            record["summary"],
+            record["tonight"],
+            record["tomorrow"],
+            {
+                "principle": record["principle"],
+                "scripture": record["scripture"],
+                "practice": record["practice"]
+            },
+            {
+                "title": record["breathing_title"],
+                "purpose": record["breathing_purpose"]
+            },
+            {
+                "scripture": record["spiritual_scripture"],
+                "reflection": record["spiritual_reflection"],
+                "faith_action": record["faith_action"]
+            },
             language
         )
 
-        if mode == "Dashboard":
-            st.markdown(f"""
-            <div class="result-card">
-                <div class="section-title">{t["reset_note"]}</div>
-                <div class="small-caption">{t["reset_caption"]}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            st.markdown("### " + t["insight"])
-            st.info(summary)
-
-            st.markdown("---")
-            st.caption(f"{t['matched_topic']}: {TOPIC_OPTIONS[topic][language]}")
-
-            st.markdown("### " + t["truth"])
-            st.success(spiritual["principle"])
-
-            st.markdown("### " + t["scripture"])
-            st.info(spiritual["scripture"])
-
-            st.markdown("### " + t["practice"])
-            st.warning(spiritual["practice"])
-
-            st.markdown("---")
-
-            st.markdown("### " + t["tonight"])
-            st.success(tonight)
-
-            st.markdown("### " + t["tomorrow"])
-            st.warning(tomorrow)
-
-            st.markdown("---")
-
-            st.markdown("### " + t["breathing"])
-            st.success(breathing["title"])
-
-            st.markdown("**" + t["purpose"] + "**")
-            st.info(breathing["purpose"])
-
-            st.markdown("**" + t["steps"] + "**")
-            for step in breathing["steps"]:
-                st.write(f"- {step}")
-
-            st.markdown("---")
-
-            st.markdown("### " + t["spiritual_guidance"])
-
-            st.markdown("**" + t["scripture"] + "**")
-            st.info(spiritual_breathing["scripture"])
-
-            st.markdown("**" + t["reflection"] + "**")
-            st.write(spiritual_breathing["reflection"])
-
-            st.markdown("**" + t["faith_action"] + "**")
-            st.success(spiritual_breathing["faith_action"])
-
-        elif mode == "Story Mode":
-            st.subheader(t["story_title"])
-            st.caption(f"{t['matched_topic']}: {TOPIC_OPTIONS[topic][language]}")
-            st.markdown(story)
+        st.markdown(story)
 
 st.markdown("---")
 
@@ -1235,7 +1265,7 @@ ht = HISTORY_TEXT[language]
 
 st.markdown(f"""
 <div class="app-card">
-    <div class="section-title">{ht["title"]}</div>
+    <div class="hero-title">{ht["title"]}</div>
     <div class="small-caption">{ht["caption"]}</div>
 </div>
 """, unsafe_allow_html=True)
