@@ -1052,8 +1052,38 @@ mode = st.radio(
 
 st.markdown("---")
 
-st.subheader(t["daily_checkin"])
-st.caption(t["daily_caption"])
+st.markdown("""
+<style>
+.section-card {
+    background: #ffffff;
+    padding: 24px 28px;
+    border-radius: 20px;
+    border: 1px solid #eef1f6;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    margin-top: 20px;
+    margin-bottom: 24px;
+}
+
+.section-title-big {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.section-caption {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 18px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown(f"""
+<div class="section-card">
+    <div class="section-title-big">{t["daily_checkin"]}</div>
+    <div class="section-caption">{t["daily_caption"]}</div>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown(" ")
 
@@ -1175,10 +1205,36 @@ if "current_record" in st.session_state:
     record = st.session_state["current_record"]
 
     if mode == t["dashboard"]:
+        st.markdown("""
+        <style>
+        .section-card {
+            background: #ffffff;
+            padding: 24px 28px;
+            border-radius: 20px;
+            border: 1px solid #eef1f6;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            margin-top: 20px;
+            margin-bottom: 24px;
+        }
+
+        .section-title-big {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .section-caption {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 18px;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
         st.markdown(f"""
-        <div class="result-card">
-            <div class="hero-title"><b>{t["reset_note"]}</b></div>
-            <div class="small-caption">{t["reset_caption"]}</div>
+        <div class="section-card">
+            <div class="section-title-big"><b>{t["reset_note"]}</b></div>
+            <div class="section-caption">{t["reset_caption"]}</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -1263,10 +1319,36 @@ st.markdown("---")
 
 ht = HISTORY_TEXT[language]
 
+st.markdown("""
+<style>
+.section-card {
+    background: #ffffff;
+    padding: 24px 28px;
+    border-radius: 20px;
+    border: 1px solid #eef1f6;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    margin-top: 20px;
+    margin-bottom: 24px;
+}
+
+.section-title-big {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.section-caption {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 18px;
+}
+</style>
+""", unsafe_allow_html=True)
+
 st.markdown(f"""
-<div class="app-card">
-    <div class="hero-title">{ht["title"]}</div>
-    <div class="small-caption">{ht["caption"]}</div>
+<div class="section-card">
+    <div class="section-title-big">{ht["title"]}</div>
+    <div class="section-caption">{ht["caption"]}</div>
 </div>
 """, unsafe_allow_html=True)
 
