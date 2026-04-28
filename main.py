@@ -1145,8 +1145,8 @@ with c2:
         format_func=lambda x: {
             1: "1 - Relaxed" if language == "English" else ("1 - 放松" if language == "中文" else "1 - 편안함"),
             2: "2 - Manageable" if language == "English" else ("2 - 可控" if language == "中文" else "2 - 감당 가능"),
-            3: "3 - High pressure" if language == "English" else ("3 - 压力较大" if language == "中文" else "3 - 높은 압박"),
-            4: "4 - Overwhelmed" if language == "English" else ("4 - 不堪重负" if language == "中文" else "4 - 압도됨"),
+            3: "3 - High pressure" if language == "English" else ("3 - 压力较大" if language == "中文" else "3 - 스트레스가 큼"),
+            4: "4 - Overwhelmed" if language == "English" else ("4 - 不堪重负" if language == "中文" else "4 - 감당하기 어려움"),
         }[x]
     )
 
