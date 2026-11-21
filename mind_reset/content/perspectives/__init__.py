@@ -1,0 +1,1 @@
+"""Internal content perspective adapters."""
