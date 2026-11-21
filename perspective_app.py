@@ -9,6 +9,7 @@ from mind_reset.practices.breathing import generate_breathing_practice
 from mind_reset.reflection.rules import generate_summary
 
 
+BRAND_NAME = "心境 MindHarmony AI"
 LANGUAGES = {"zh": "中文", "en": "English", "ko": "한국어"}
 COPY = {
     "perspective": ("内容视角", "Content perspective", "콘텐츠 관점"),
@@ -37,7 +38,13 @@ COPY = {
     "topic_mode": ("选题方式", "Topic selection mode", "주제 선택 방식"),
     "auto": ("自动选题", "Automatic", "자동 선택"),
     "manual": ("手动选题", "Manual", "직접 선택"),
-    "title": ("四视角 · 本地演示", "Four perspectives · Local demo", "네 가지 관점 · 로컬 데모"),
+    "title": (BRAND_NAME, BRAND_NAME, BRAND_NAME),
+    "tagline": (
+        "让科学与古老智慧共同照亮内心。",
+        "Let science and ancient wisdom illuminate our inner lives together.",
+        "과학과 오랜 지혜가 함께 우리의 마음을 밝혀 줍니다.",
+    ),
+    "demo": ("四视角 · 本地演示", "Four perspectives · Local demo", "네 가지 관점 · 로컬 데모"),
     "unavailable": ("此主题暂无获准发布的正文。", "No release-approved text is available for this topic.", "이 주제에는 공개 승인된 본문이 없습니다."),
 }
 
@@ -49,11 +56,10 @@ def clear_session():
 
 
 def run():
-    st.set_page_config(page_title="Mind Reset · Four perspectives")
+    st.set_page_config(page_title=BRAND_NAME)
     if st.get_option("server.address") != "127.0.0.1":
         st.error("This page only runs on 127.0.0.1.")
         return
-
     state = st.session_state
     locale = st.sidebar.selectbox(
         "Language / 语言 / 언어", tuple(LANGUAGES), format_func=LANGUAGES.__getitem__, key="four_locale",
@@ -72,6 +78,8 @@ def run():
     state["four_previous_locale"] = locale
 
     st.title(labels["title"])
+    st.markdown(labels["tagline"])
+    st.caption(labels["demo"])
     st.caption(text["disclaimer"])
     st.warning({
         "zh": "仅限虚构签到。请勿输入真实个人、医疗或心理健康信息。",
@@ -132,6 +140,8 @@ def run():
                 generate_summary(moods, events, stress, energy, language), adapter.generate(request),
             )
 
+    results = st.container()
+    st.caption(labels["title"])
     if "four_snapshot" not in state:
         return
     summary, result = state["four_snapshot"]
@@ -142,24 +152,24 @@ def run():
     ):
         state.pop("four_snapshot", None)
         return
-    st.subheader(labels[perspective])
-    st.caption(labels[result.topic_id])
+    results.subheader(f"{labels['title']} · {labels[perspective]}")
+    results.caption(labels[result.topic_id])
     if view == "dashboard":
-        st.subheader(text["insight"])
-        st.info(summary)
+        results.subheader(text["insight"])
+        results.info(summary)
     else:
-        st.markdown(f"**{text['insight']}**\n\n{summary}")
+        results.markdown(f"**{text['insight']}**\n\n{summary}")
     if isinstance(result, AvailableContent) and adapter.is_current(result):
         for block in result.blocks:
-            st.write(block.text)
-            st.caption(f"{block.source.source_id} · {block.source.locator}")
+            results.write(block.text)
+            results.caption(f"{block.source.source_id} · {block.source.locator}")
     else:
         # Remove an invalidated body so that changing views cannot restore it.
         if isinstance(result, AvailableContent):
             state["four_snapshot"] = (
                 summary, UnavailableContent(perspective, locale, "missing_content", result.topic_id),
             )
-        st.info(labels["unavailable"])
+        results.info(labels["unavailable"])
 
 
 if __name__ == "__main__":
